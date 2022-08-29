@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  database:
+    container_name: database
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=username
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=blog
+
+  backend:
+    container_name: backend
+    depends_on:
+      - database
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+     - 8080:8080
+    environment:
+      - DB_ADDRESS=mongodb://username:password@host.docker.internal:27017
